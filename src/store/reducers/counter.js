@@ -18,10 +18,13 @@ export default handleActions({
     }
   },
   [LOAD_MORE] (state, action) {
-    state.index_data.list.push(...action.payload.list)
     return {
       ...state,
-      ended: false
+      ended: false,
+      index_data: {
+        banner: state.index_data.banner,
+        list: [...state.index_data.list,...action.payload.list]
+      }
     }
   },
   [TYPE_DATA] (state, action) {
