@@ -1,0 +1,18 @@
+{
+	"description": "A WePY project",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"postcss": false,
+		"minified": true,
+		"newFeature": true
+	},
+	"client": "./client",
+	"svr": "./server",
+	"qcloudRoot": "./server",
+	"compileType": "miniprogram",
+	"appid": "wxd9718c3e4da2057b",
+	"projectname": "zhihuribao",
+	"miniprogramRoot": "./dist",
+	"condition": {}
+}

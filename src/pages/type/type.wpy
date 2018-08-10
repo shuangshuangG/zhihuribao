@@ -1,0 +1,87 @@
+<style lang="less">
+  page{
+    background: #f5f5f5;
+  }
+  .list{
+    width: 100%;
+    background: #f5f5f5;
+    .item{
+      margin: 30rpx 0;
+      background: #fff;
+    }
+    image{
+      width: 100%;
+      height: 340rpx;
+    }
+    .title{
+      font-size: 15px;
+      display: block;
+      margin: 10rpx 20rpx;
+    }
+    .msg{
+      display: block;
+      font-size: 14px;
+      margin: 10rpx 20rpx 20rpx 20rpx;
+    }
+  }
+
+</style>
+<template>
+  <view class="list">
+    <scroll-view
+      scroll-y=true
+      class="item"
+      wx:for="{{typeData.counter.type_data}}"
+      wx:key="*this"
+      @tap="handelTypeClick('{{item.id}}', '{{item.name}}')"
+    >
+      <image mode="aspectFill" src="{{item.thumbnail}}" class="image"/>
+      <text class="title">{{item.name}}</text>
+      <text class="msg">{{item.description}}</text>
+    </scroll-view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+  import { get_type_data } from '../../store/actions'
+
+  @connect({
+    typeData (state) {
+      return state
+    }
+  }, {
+    getTypeData: get_type_data
+  })
+
+  export default class Type extends wepy.page {
+    config = {
+      navigationBarTitleText: '主题日报'
+    }
+    components = {
+    }
+
+    computed = {
+    }
+
+    methods = {
+      handelTypeClick(id, name) {
+
+        wx.navigateTo({
+          url: '/pages/typeDetail/typeDetail?id=' + id + '&name=' + name
+        })
+      }
+    }
+
+    data = {
+    }
+  
+    onLoad() {
+      this.methods.getTypeData()
+    }
+
+
+  }
+</script>

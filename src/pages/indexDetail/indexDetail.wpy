@@ -1,0 +1,115 @@
+<style lang="less">
+ .head{
+  width: 100%;
+  position: relative;
+  image{
+    width: 100%;
+  }
+  .title{
+    display: block;
+    width: 96%;
+    position: absolute;
+    bottom: 20%;
+    margin: 0 2%;
+    color: #fff;
+    font-size: 16px;
+  }
+  .source{
+    display: block;
+    width: 96%;
+    position: absolute;
+    bottom: 8%;
+    right: 4%;
+    text-align: right;
+    color: #fff;
+    font-size: 14px;
+  }
+ }
+
+ .text{
+   width: 100%;
+   text{
+     display: block;
+     width: 90%;
+     margin-left: 5%;
+     font-size: 15px;
+     overflow-x: hidden;
+   }
+ }
+
+ .pic{
+   width: 100%;
+   image{
+     width: 100%;
+   }
+ }
+</style>
+<template>
+  <view class="container">
+
+    <view wx:if="{{indexDetail.index_detail.img}}" class="head">
+      <image src="{{indexDetail.index_detail.img}}"/>
+      <text class="title">
+        {{indexDetail.index_detail.title}}
+      </text>
+      <text class="source">
+        {{indexDetail.index_detail.image_source}}
+      </text>
+    </view>
+
+    <view class="pic" wx:for="{{indexDetail.index_detail.pictures}}" wx:key="*this">
+      <image src="{{item}}"/>
+    </view>
+
+    <view class="text">
+      <text>
+        　　{{indexDetail.index_detail.text}}
+      </text>
+    </view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+  import { get_index_detail } from '../../store/actions' 
+
+  @connect({
+    indexDetail(state) {
+      return state.counter
+    }
+  },{
+    indexDetail: get_index_detail
+  })
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '知乎日报'
+    }
+
+    components = {
+    }
+
+    data = {
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad(e) {
+      this.methods.indexDetail(e.id)
+
+      console.log(this.data)
+    }
+  }
+</script>

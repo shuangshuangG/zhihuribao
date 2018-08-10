@@ -1,0 +1,220 @@
+<style lang="less">
+  page{
+    background: #f5f5f5;
+  }
+  .container{
+    height: 35%;
+    width: 100%;
+
+    .btn{
+      height: 40rpx;
+      width: 96%;
+      border-radius: 10rpx;
+      line-height: 50rpx;
+      margin: 50rpx 0;
+      button{
+        background: #1AAD19;
+        line-height: 70rpx;
+        font-size: 14px;
+        color: #fff;
+        position: relative;
+        image{
+          position: absolute;
+          width: 200rpx;
+          height: 160rpx;
+          z-index: 2;
+          left: 44%;
+          top: -110%;
+          transform: translate(-50%);
+        }
+      }
+    }
+  }
+  .swiper{
+    width: 100% !important;
+    height: 100% !important;
+    image{
+      width: 100%;
+      height: 100%;
+      // height: 300rpx;
+    }
+    a{
+      height: 100%;
+      width: 100%;
+      display: inline-block;
+      position: relative;
+      span{
+        position: absolute;
+        bottom: 14%;
+        margin: 0 5%;
+        color: #fff;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .list{
+    width: 100%;
+  }
+  .item{
+    height: 180rpx;
+    background: #fff;
+    width: 92%;
+    margin-left: 2%;
+    margin-top: 20rpx;
+    border-radius: 10rpx;
+    font-size: 15px;
+    padding: 1% 2%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eee;
+    border-bottom: 1px solid #ddd;
+    .image{
+      flex: 1;
+      height: 90%;
+      display: absolute;
+    }
+    text{
+      flex: 3;
+      box-sizing: border-box;
+      padding: 20rpx;
+      padding-top: 0;
+      padding-bottom: 40rpx;
+    }
+  }
+  .title{
+    background: none;
+    color: #999;
+    font-size: 14px;
+    height: 60rpx;
+    padding: 20rpx;
+    padding-bottom: 0;
+    margin-left: 20rpx;
+  }
+
+</style>
+<template>
+  <view class="container">
+
+    <swiper class="swiper" indicator-dots="{{indicatorDots}}"
+      autoplay=true
+      interval=4000
+      duration=900
+      indicator-color="rgba(0, 0, 0, .3)"
+      indicator-active-color="black"
+      circular=true
+      indicator-dots=true
+    >
+      <block wx:key="*this" wx:for="{{indexData.counter.index_data.banner}}">
+        <swiper-item>
+          <a @tap="handelDetailClick('{{item.id}}')">
+            <span>{{item.title}}</span>
+            <image mode="aspectFill" src="{{item.image}}" class="slide-image"/>
+          </a>
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <view class="list">
+      <scroll-view
+       scroll-y=true
+       wx:for="{{indexData.counter.index_data.list}}"
+       wx:key="*this"
+      >
+        <view wx:if="{{item.header}}" class="scroll-view-item title">{{item.header}}</view>
+        <view wx:else class="scroll-view-item item" @tap="handelDetailClick('{{item.id}}')">
+          <text>
+            {{item.title}}
+          </text>
+          <image src="{{item.images[0]}}" class="image" width="20%"/>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view class="btn">
+      <button bindtap="handelButtonClick" loading='{{ended}}'>
+        更多
+      </button>
+    </view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+  import { get_index_data, loadMore } from '../../store/actions'
+  import getLocalDate from '../../utils/util.js'
+
+  @connect({
+    indexData (state) {
+      return state
+    }
+  }, {
+    getIndexData: get_index_data,
+    loadMore
+  })
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '知乎日报'
+    }
+    components = {
+    }
+
+    // mixins = [testMixin]
+
+    data = {
+      localDate: 0,
+      loadMoreCount: 0,
+      localTime: 0
+    }
+
+    computed = {
+      
+    }
+
+    methods = {
+      handelButtonClick() {
+        this.data.localDate = getLocalDate(this.data.localTime - 86400000 * this.data.loadMoreCount++)
+        this.setData({ ended: true })
+        this.methods.loadMore(this.data.localDate)
+
+        var timer = setInterval(() => {
+          if(!this.data.indexData.counter.ended){
+            setTimeout(() =>{
+              this.setData({ ended: false })
+            },500)
+            clearInterval(timer)
+          }
+        }, 50);
+
+      },
+
+      handelDetailClick(id) {
+        // console.log(id)
+        wx.navigateTo({
+          url: '/pages/indexDetail/indexDetail?id=' + id
+        })
+      }
+    }
+
+    // events = {
+    //   'index-emit': (...args) => {
+    //     let $event = args[args.length - 1]
+    //     console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+    //   }
+    // }
+
+    onLoad() {
+      this.data.localTime = new Date().getTime()
+      // console.log(this.data.localTime)
+      this.data.localDate = getLocalDate(this.data.localTime)
+
+      this.methods.getIndexData()
+      
+    }
+  }
+</script>

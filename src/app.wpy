@@ -1,0 +1,97 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+page{
+  height: 100%;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+import { setStore } from 'wepy-redux'
+import configStore from './store'
+
+const store = configStore()
+setStore(store)
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index/index',
+      'pages/type/type',
+      'pages/indexDetail/indexDetail',
+      'pages/typeDetail/typeDetail'
+    ],
+    tabBar: {
+      color: "#353535",
+      selectedColor: "#3cc51f",
+      borderStyle: "white",
+      backgroundColor: "#ffffff",
+      list: [{
+        pagePath: "pages/index/index",
+        iconPath: "images/icon_API.png",
+        selectedIconPath: "images/icon_API_HL.png",
+        text: "主页"
+      }, {
+        pagePath: "pages/type/type",
+        iconPath: "images/icon_component.png",
+        selectedIconPath: "images/icon_component_HL.png",
+        text: "主题日报"
+      }]
+    },
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#00a2ea',
+      navigationBarTitleText: '知乎日报',
+      navigationBarTextStyle: 'white'
+    }
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+  }
+
+  onLaunch() {
+    // this.testAsync()
+  }
+
+  sleep (s) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('promise resolved')
+      }, s * 1000)
+    })
+  }
+
+  async testAsync () {
+    const data = await this.sleep(3)
+    console.log(data)
+  }
+
+  getUserInfo(cb) {
+    const that = this
+    if (this.globalData.userInfo) {
+      return this.globalData.userInfo
+    }
+    wepy.getUserInfo({
+      success (res) {
+        that.globalData.userInfo = res.userInfo
+        cb && cb(res.userInfo)
+      }
+    })
+  }
+}
+</script>
