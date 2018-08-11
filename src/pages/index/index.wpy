@@ -117,6 +117,8 @@
       </block>
     </swiper>
 
+    <comp :mytitle.sync="title">{{title}}</comp>
+
     <view class="list">
       <scroll-view
        scroll-y=true
@@ -148,6 +150,8 @@
   import { get_index_data, loadMore } from '../../store/actions'
   import getLocalDate from '../../utils/util.js'
 
+  import comp from '../../components/component'
+
   @connect({
     indexData (state) {
       return state
@@ -162,6 +166,7 @@
       navigationBarTitleText: '知乎日报'
     }
     components = {
+      comp: comp
     }
 
     // mixins = [testMixin]
@@ -169,7 +174,8 @@
     data = {
       localTime: 0,
       localDate: 0,
-      loadMoreCount: 0
+      loadMoreCount: 0,
+      title: '测试自定义组件传参'
     }
 
     computed = {
@@ -217,8 +223,13 @@
       this.loadMoreCount = 0
       // this.$apply()
       // console.log(this.localTime, this.localDate)
-      // console.log(this.data)
       this.methods.getIndexData()
+      // console.log(this.data)
+      setTimeout(() => {
+        this.title = '测试成功！'
+        this.$apply()
+        console.log(this.data)
+      },3000)
       
     }
   }

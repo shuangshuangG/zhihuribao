@@ -1,0 +1,28 @@
+<style lang="less" scoped>
+    text{
+        color: red;
+    }
+</style>
+<template>
+    <view>
+        <text>
+            {{mytitle}}
+        </text>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class comp extends wepy.component {
+    props = {
+        mytitle: {
+            // twoWay: true
+        }
+    }
+    onLoad() {
+        console.log(this.mytitle)
+    }
+
+}
+</script>
+
